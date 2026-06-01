@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package emergencydispatch;
+
+package com.mycompany.emergency_medical_dispatch;
 
 public class pathNode implements Comparable<pathNode> {
     String location;
