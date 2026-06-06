@@ -1,6 +1,7 @@
 package com.mycompany.emergency_medical_dispatch;
 
 import java.util.*;
+import java.util.Scanner; 
 
 public class Main {
     public static void main(String[] args) {
@@ -28,11 +29,34 @@ public class Main {
 
         System.out.println("=== RECEIVING INCOMING EMERGENCY CALLS ===");
         
-        // 3. Simulate the exact scenario from project 
-        // Format: Call(severity, description, location)
-        urgentCalls.insert(new Call(1, "Heart attack", "Location A"));
-        nonUrgentCalls.enqueue(new Call(3, "Minor car accident", "Location B")); 
-        urgentCalls.insert(new Call(2, "House fire", "Location C"));
+        // 3. User's input
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter the details for incoming emergencies.");
+
+        for (int i = 1; i <= 3; i++) {
+            System.out.println("\n--- Emergency Call " + i + " ---");
+            
+            System.out.print("Enter Emergency Type: ");
+            String type = scanner.nextLine();
+            
+            System.out.print("Enter Severity (1 = Highest, 2 = Medium, 3 = Lowest): ");
+            int severity = scanner.nextInt();
+            scanner.nextLine(); 
+            
+            System.out.print("Enter Location: ");
+            String location = scanner.nextLine();
+            
+            // Automatically sort into the correct Queue based on severity
+            if (severity == 3) {
+                nonUrgentCalls.enqueue(new Call(severity, type, location));
+                System.out.println("Added to Standard Queue: " + type + " (Severity " + severity + ")");
+            } else {
+                urgentCalls.insert(new Call(severity, type, location));
+                
+            }
+        }
+        
+        scanner.close(); 
 
         System.out.println("\n=== STARTING SYSTEM DISPATCH WORKFLOW ===");
 
@@ -54,7 +78,7 @@ public class Main {
                 currentEmergency = nonUrgentCalls.dequeue(); // Pulls the oldest non-urgent call
             }
 
-            // Route the ambulance using pthfinding gaph
+            // Route the ambulance using pathfinding graph
             if (currentEmergency != null) {
                 // Pass the location directly to Dijkstra algorithm
                 cityMap.dispatchClosestAmbulance(currentEmergency.location, availableAmbulances);
