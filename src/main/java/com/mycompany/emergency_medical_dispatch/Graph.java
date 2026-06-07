@@ -21,24 +21,34 @@ public class Graph {
 
     // Add road (edge) between two locations with a specific ETA (weight)
     public void addRoad(String source, String destination, int eta) {
+        // Ensure both locations exist in the map to prevent NullPointerException
+        cityMap.putIfAbsent(source, new ArrayList<>());
+        cityMap.putIfAbsent(destination, new ArrayList<>());
+        
         cityMap.get(source).add(new Edge(destination, eta));
         cityMap.get(destination).add(new Edge(source, eta)); // Assuming two-way roads
     }
 
+    // Get all locations in the city
+    public Set<String> getLocations() {
+        return cityMap.keySet();
+    }
+
     /**
      * Dijkstra's Algorithm: Finds the closest available ambulance and prints the route.
+     * @return The name of the ambulance dispatched, or null if none reachable.
      */
-    public void dispatchClosestAmbulance(String emergencyLocation, List<String> availableAmbulances) {
+    public String dispatchClosestAmbulance(String emergencyLocation, List<String> availableAmbulances) {
         if (!cityMap.containsKey(emergencyLocation)) {
-            System.out.println("Error: Location not found on the map.");
-            return;
+            System.out.println("Error: Location '" + emergencyLocation + "' not found on the map.");
+            return null;
         }
 
         // Distance table to track the shortest known ETA to every location
         Map<String, Integer> shortestETA = new HashMap<>();
         // Tracks the path backwards to reconstruct the route
         Map<String, String> previousNode = new HashMap<>();
-        // Priority Queue to always explore the closest locations first
+        // Priority Queue to always explore the closest locations first (Dijkstra)
         PriorityQueue<pathNode> minHeap = new PriorityQueue<>();
 
         // Initialize all distances to infinity, except the starting emergency location
@@ -58,9 +68,8 @@ public class Graph {
                 System.out.println("Estimated Time of Arrival (ETA): " + current.distance + " minutes");
                 printRoute(currentLocation, emergencyLocation, previousNode);
                 
-                // Remove the ambulance from available list since it's now dispatched
-                availableAmbulances.remove(currentLocation); 
-                return;
+                // Return the ambulance name so it can be marked as busy
+                return currentLocation;
             }
 
             // Optimization: If we found a longer path than what we already know, skip it
@@ -69,18 +78,21 @@ public class Graph {
             }
 
             // Explore all connecting roads from the current location
-            for (Edge road : cityMap.get(currentLocation)) {
-                int newETA = shortestETA.get(currentLocation) + road.weight;
+            if (cityMap.get(currentLocation) != null) {
+                for (Edge road : cityMap.get(currentLocation)) {
+                    int newETA = shortestETA.get(currentLocation) + road.weight;
 
-                // If we found a faster route to the neighbor, update it
-                if (newETA < shortestETA.get(road.destination)) {
-                    shortestETA.put(road.destination, newETA);
-                    previousNode.put(road.destination, currentLocation); // Remember how we got here
-                    minHeap.add(new pathNode(road.destination, newETA));
+                    // If we found a faster route to the neighbor, update it
+                    if (newETA < shortestETA.get(road.destination)) {
+                        shortestETA.put(road.destination, newETA);
+                        previousNode.put(road.destination, currentLocation); // Remember how we got here
+                        minHeap.add(new pathNode(road.destination, newETA));
+                    }
                 }
             }
         }
-        System.out.println("No available ambulances can reach this location.");
+        System.out.println("No available ambulances can reach " + emergencyLocation);
+        return null;
     }
 
     // Helper method to reconstruct and print the path

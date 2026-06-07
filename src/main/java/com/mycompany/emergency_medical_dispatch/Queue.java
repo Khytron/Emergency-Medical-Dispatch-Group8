@@ -8,15 +8,23 @@ package com.mycompany.emergency_medical_dispatch;
  *
  * @author Zai Husna
  */
-    public class Queue<E> {
+/**
+ * Custom Queue implementation for non-urgent emergency calls (FIFO).
+ * This class uses a circular array with dynamic resizing to handle 
+ * an increasing number of calls efficiently.
+ * 
+ * @param <E> The type of elements stored in the queue.
+ */
+public class Queue<E> {
     private E[] data;
     private int size;
     private int capacity;
     private int head;
     private int tail;
 
-   
-  
+    /**
+     * Default constructor with initial capacity of 10.
+     */
     public Queue() {
         this.capacity = 10;
         this.data = (E[]) new Object[capacity];
@@ -25,8 +33,9 @@ package com.mycompany.emergency_medical_dispatch;
         this.tail = 0;
     }
 
-
- 
+    /**
+     * Constructor with custom initial capacity.
+     */
     public Queue(int initial) {
         this.capacity = initial;
         this.data = (E[]) new Object[capacity];
@@ -35,7 +44,10 @@ package com.mycompany.emergency_medical_dispatch;
         this.tail = 0;
     }
 
-
+    /**
+     * Adds an element to the back of the queue (FIFO).
+     * Automatically resizes if the capacity is reached.
+     */
     public void enqueue(E e) {
         if (size == capacity) {
             resize();
@@ -45,7 +57,9 @@ package com.mycompany.emergency_medical_dispatch;
         size++;
     }
 
-   
+    /**
+     * Removes and returns the element from the front of the queue.
+     */
     public E dequeue() {
         if (isEmpty()) {
             return null;
@@ -57,7 +71,6 @@ package com.mycompany.emergency_medical_dispatch;
         return element;
     }
 
-    
     public E getElement() {
         if (isEmpty()) {
             return null;
@@ -65,22 +78,21 @@ package com.mycompany.emergency_medical_dispatch;
         return data[head];
     }
 
- 
     public boolean isEmpty() {
         return size == 0;
     }
-
 
     public int size() {
         return size;
     }
 
-   
+    /**
+     * Doubles the capacity of the circular array when full.
+     */
     public void resize() {
         int newCapacity = capacity * 2;
         E[] newData = (E[]) new Object[newCapacity];
         
-     
         for (int i = 0; i < size; i++) {
             newData[i] = data[(head + i) % capacity];
         }

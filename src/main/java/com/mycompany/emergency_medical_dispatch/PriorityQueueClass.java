@@ -3,27 +3,40 @@ package com.mycompany.emergency_medical_dispatch;
 import java.util.PriorityQueue;
 import java.util.Comparator;
 
+/**
+ * PriorityQueueClass implements a severity-based prioritization system.
+ * It functions as a Max-Heap based on priority (where lower severity value = higher priority).
+ * It uses a Min-Heap internally on the severity field to ensure that 
+ * Severity 1 is always processed before 2 and 3.
+ * 
+ * Complexity:
+ * - Insertion: O(log n)
+ * - Removal (extractMin): O(log n)
+ */
 public class PriorityQueueClass {
-        // Min-Heap bcs smallest number get priority
-        // The priority queue - severity 1 comes out first
+        // Min-Heap because the smallest severity number gets the highest priority
         private PriorityQueue<Call> pq;
 
-        // Constructor
         public PriorityQueueClass() {
+            // Using a comparator to order calls by their severity field
             pq = new PriorityQueue<>(Comparator.comparingInt(call -> call.severity));
         }
 
-        // Add a call to the queue
+        /**
+         * Adds a call to the heap in O(log n) time.
+         */
         public void insert(Call call) {
             pq.add(call);
             System.out.println("Added to Priority Queue: " + call.description + " (Severity " + call.severity + ")");
         }
 
-        // Remove and return the highest priority call
+        /**
+         * Removes and returns the call with the highest priority in O(log n) time.
+         */
         public Call extractMin() {
-            Call next = pq.poll(); // poll removes, peek look but deosnt remove
+            Call next = pq.poll(); // poll removes, peek look but doesn't remove
             if (next != null) {
-                System.out.println("Dispatching: " + next.description + " (Severity " + next.severity + ")");
+                System.out.println("Extracting from PQ: " + next.description + " (Severity " + next.severity + ")");
             }
             return next;
         }

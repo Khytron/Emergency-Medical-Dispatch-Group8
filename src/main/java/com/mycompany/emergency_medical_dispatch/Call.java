@@ -1,5 +1,9 @@
 package com.mycompany.emergency_medical_dispatch;
 
+/**
+ * Represents an emergency call with a description, location, and severity level.
+ * Severity levels are 1 (Critical), 2 (Medium), and 3 (Low).
+ */
 public class Call {
     public int severity;        // 1 = critical, 2 = medium, 3 = low
     public String description;  // e.g. "Heart attack"
