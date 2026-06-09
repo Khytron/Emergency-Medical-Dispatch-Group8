@@ -27,7 +27,11 @@ public class PriorityQueueClass {
          */
         public void insert(Call call) {
             pq.add(call);
-            System.out.println("Added to Priority Queue: " + call.description + " (Severity " + call.severity + ")");
+            String sevLabel = "Low";
+            if (call.severity == 1) sevLabel = "Critical";
+            else if (call.severity == 2) sevLabel = "Medium";
+            
+            System.out.println("Added to Priority Queue: " + call.description + " at " + call.location + " (Severity " + sevLabel + ")");
         }
 
         /**
