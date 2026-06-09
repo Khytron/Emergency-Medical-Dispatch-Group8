@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Main {
+public class MainClass {
     public static void main(String[] args) {
         // 1. Initialize scanner variable
         Scanner scanner = new Scanner(System.in);
@@ -15,25 +15,41 @@ public class Main {
         Queue<Call> nonUrgentCalls = new Queue<>(); 
         
         // 3. Build the Map (Graph Integration)
-        cityMap.addLocation("Location A");
-        cityMap.addLocation("Location B");
-        cityMap.addLocation("Location C");
-        cityMap.addLocation("Location D");
-        cityMap.addLocation("Hospital Kuala Lumpur");
-        cityMap.addLocation("Hospital Selangor");
-
-        cityMap.addRoad("Hospital Kuala Lumpur", "Location C", 7);
-        cityMap.addRoad("Location C", "Location A", 3);
-        cityMap.addRoad("Hospital Selangor", "Location A", 10);
-        cityMap.addRoad("Location B", "Hospital Selangor", 4);
-        cityMap.addRoad("Location D", "Location B", 4);
-        cityMap.addRoad("Location D", "Hospital Kuala Lumpur", 3);
+        cityMap.addLocation("Shah Alam");
+        cityMap.addLocation("Elmina");
+        cityMap.addLocation("Batu Caves");
+        cityMap.addLocation("Universiti Malaya Medical Centre");
+        cityMap.addLocation("Subang Jaya");
+        cityMap.addLocation("Putrajaya");
+        cityMap.addLocation("Hospital Tengku Ampuan Rahimah");
+        cityMap.addLocation("Taman Sentosa");
+        cityMap.addLocation("Klang");
+        cityMap.addLocation("Ara Damansara Medical Centre");
         
-
+        // Weighted Graph Values
+        cityMap.addRoad("Klang", "Hospital Tengku Ampuan Rahimah", 3);
+        cityMap.addRoad("Klang", "Taman Sentosa", 9);
+        cityMap.addRoad("Klang", "Shah Alam", 12);
+        cityMap.addRoad("Klang", "Ara Damansara Medical Centre", 27);
+        cityMap.addRoad("Ara Damansara Medical Centre", "Elmina", 21);
+        cityMap.addRoad("Elmina", "Shah Alam", 24);
+        cityMap.addRoad("Shah Alam", "Hospital Tengku Ampuan Rahimah", 15);
+        cityMap.addRoad("Shah Alam", "Universiti Malaya Medical Centre", 18);
+        cityMap.addRoad("Hospital Tengku Ampuan Rahimah", "Taman Sentosa", 8);
+        cityMap.addRoad("Hospital Tengku Ampuan Rahimah", "Subang Jaya", 26);
+        cityMap.addRoad("Taman Sentosa", "Subang Jaya", 18);
+        cityMap.addRoad("Subang Jaya", "Universiti Malaya Medical Centre", 16);
+        cityMap.addRoad("Subang Jaya", "Putrajaya", 29);
+        cityMap.addRoad("Putrajaya", "Universiti Malaya Medical Centre", 36);
+        cityMap.addRoad("Universiti Malaya Medical Centre", "Batu Caves", 19);
+        cityMap.addRoad("Batu Caves", "Elmina", 26);
+        
+        
         // Track available ambulances
         List<String> availableAmbulances = new ArrayList<>();
-        availableAmbulances.add("Hospital Kuala Lumpur");
-        availableAmbulances.add("Hospital Selangor");
+        availableAmbulances.add("Universiti Malaya Medical Centre");
+        availableAmbulances.add("Hospital Tengku Ampuan Rahimah");
+        availableAmbulances.add("Ara Damansara Medical Centre");
 
         System.out.println("=== RECEIVING INCOMING EMERGENCY CALLS ===");
         
@@ -96,6 +112,7 @@ public class Main {
         // 5. Main Integration Loop (Fulfills rubrics for System Integration & Workflow)
         // This loop processes calls based on priority and handles dynamic ambulance availability.
         List<String> busyAmbulances = new ArrayList<>();
+        int dispatchCount = 0;
 
         while (!urgentCalls.isEmpty() || !nonUrgentCalls.isEmpty()) {
             // Wait for 1 seconds to simulate program execution
@@ -133,6 +150,7 @@ public class Main {
                     // Mark as busy
                     availableAmbulances.remove(dispatchedAmbulance);
                     busyAmbulances.add(dispatchedAmbulance);
+                    dispatchCount++;
                     System.out.println("Status: Ambulance dispatched from " + dispatchedAmbulance + ". (Ambulance is now BUSY)");
                 } else {
                     System.out.println("Status: FAILED. No available ambulance can reach this location.");
@@ -141,15 +159,18 @@ public class Main {
             }
         }
         
+        sleep(1000); // Wait 1 second
         System.out.println("\n=== ALL EMERGENCY CALLS PROCESSED ===");
+        System.out.println("AMOUNT OF AMBULANCE DISPATCHED: " + dispatchCount);
         scanner.close(); 
     }
     
+    // Method for pausing application for X miliseconds
     static void sleep(int ms){
         try {  
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
