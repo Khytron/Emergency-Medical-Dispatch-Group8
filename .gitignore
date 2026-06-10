@@ -29,3 +29,5 @@ nbproject/
 
 nbactions.xml
 
+#IntelliJ files
+.idea/
