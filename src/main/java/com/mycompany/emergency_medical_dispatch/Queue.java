@@ -53,7 +53,14 @@ public class Queue<E> {
             resize();
         }
         data[tail] = e;
-        tail = (tail + 1) % capacity; 
+        tail = (tail + 1) % capacity;
+        /*
+         simplified logic: when tail index reach last index (capacity),
+         tail index will become zero, so it loops back to the first index (assuming first index in dequeued)
+         modulo operator (%) makes this possible by giving the remainder: 0.1, 0.2, ... 0.9, 1.0
+         give 1,2,3... if tail /= capacity
+         give 0 if tail = capacity
+        */
         size++;
     }
 
